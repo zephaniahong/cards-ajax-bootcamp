@@ -7,8 +7,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      cards: {
-        // allow us to keep non-relational data for the cards
+      cardDeck: {
+        // JSON allows us to store non-relational data easily.
+        // Non-relational data refers to data that we may not query across records.
+        type: Sequelize.JSON,
+      },
+      playerHand: {
+        // We need not store all JSON data in a single JSON column. In this case,
+        // we can split our JSON columns for data segregation, to increase
+        // transparency in how we use our data.
         type: Sequelize.JSON,
       },
       createdAt: {

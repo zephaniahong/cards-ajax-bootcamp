@@ -3,7 +3,7 @@ import db from './models/index.mjs';
 // import your controllers here
 import games from './controllers/games.mjs';
 
-export default function routes(app) {
+export default function bindRoutes(app) {
   const GamesController = games(db);
   // main page
   app.get('/', GamesController.index);

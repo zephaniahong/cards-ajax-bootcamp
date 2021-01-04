@@ -5,20 +5,20 @@ let currentGame = null;
 const createGameBtn = document.createElement('button');
 
 // DOM manipulation function that displays the player's current hand.
-const runGame = function ({ cards }) {
+const runGame = function ({ playerHand }) {
   // manipulate DOM
   const gameContainer = document.querySelector('#game-container');
 
   gameContainer.innerText = `
     Your Hand:
     ====
-    ${cards.playerHand[0].name}
+    ${playerHand[0].name}
     of
-    ${cards.playerHand[0].suit}
+    ${playerHand[0].suit}
     ====
-    ${cards.playerHand[1].name}
+    ${playerHand[1].name}
     of
-    ${cards.playerHand[1].suit}
+    ${playerHand[1].suit}
   `;
 };
 

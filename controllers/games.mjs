@@ -110,13 +110,12 @@ export default function games(db) {
   // create a new game. Insert a new row in the DB.
   const create = async (request, response) => {
     // deal out a new shuffled deck for this game.
-    const deck = shuffleCards(makeDeck());
+    const cardDeck = shuffleCards(makeDeck());
+    const playerHand = [cardDeck.pop(), cardDeck.pop()];
 
     const newGame = {
-      cards: {
-        playerHand: [deck.pop(), deck.pop()],
-        deck,
-      },
+      cardDeck,
+      playerHand,
     };
 
     try {
@@ -127,9 +126,7 @@ export default function games(db) {
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        cards: {
-          playerHand: game.cards.playerHand,
-        },
+        playerHand: game.playerHand,
       });
     } catch (error) {
       response.status(500).send(error);
@@ -143,24 +140,19 @@ export default function games(db) {
       const game = await db.Game.findByPk(request.params.id);
 
       // make changes to the object
-      const playerHand = [game.cards.deck.pop(), game.cards.deck.pop()];
-      const { deck } = game.cards;
+      const playerHand = [game.cardDeck.pop(), game.cardDeck.pop()];
 
       // update the game with the new info
       await game.update({
-        cards: {
-          playerHand,
-          deck,
-        },
+        cardDeck: game.cardDeck,
+        playerHand,
       });
 
       // send the updated game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        cards: {
-          playerHand: game.cards.playerHand,
-        },
+        playerHand: game.playerHand,
       });
     } catch (error) {
       response.status(500).send(error);
