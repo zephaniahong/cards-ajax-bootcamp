@@ -6,10 +6,7 @@ export default function gameModel(sequelize, DataTypes) {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    cardDeck: {
-      type: DataTypes.JSON,
-    },
-    playerHand: {
+    gameState: {
       type: DataTypes.JSON,
     },
     createdAt: {

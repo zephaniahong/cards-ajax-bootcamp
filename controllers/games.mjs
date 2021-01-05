@@ -114,8 +114,10 @@ export default function games(db) {
     const playerHand = [cardDeck.pop(), cardDeck.pop()];
 
     const newGame = {
-      cardDeck,
-      playerHand,
+      gameState: {
+        cardDeck,
+        playerHand,
+      },
     };
 
     try {
@@ -126,7 +128,7 @@ export default function games(db) {
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        playerHand: game.playerHand,
+        playerHand: game.gameState.playerHand,
       });
     } catch (error) {
       response.status(500).send(error);
@@ -140,19 +142,22 @@ export default function games(db) {
       const game = await db.Game.findByPk(request.params.id);
 
       // make changes to the object
-      const playerHand = [game.cardDeck.pop(), game.cardDeck.pop()];
+      const playerHand = [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
 
       // update the game with the new info
       await game.update({
-        cardDeck: game.cardDeck,
-        playerHand,
+        gameState: {
+          cardDeck: game.gameState.cardDeck,
+          playerHand,
+        },
+
       });
 
       // send the updated game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        playerHand: game.playerHand,
+        playerHand: game.gameState.playerHand,
       });
     } catch (error) {
       response.status(500).send(error);
