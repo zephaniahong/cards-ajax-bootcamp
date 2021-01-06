@@ -1,5 +1,5 @@
 export default function gameModel(sequelize, DataTypes) {
-  return sequelize.define('Game', {
+  return sequelize.define('game', {
     id: {
       allowNull: false,
       autoIncrement: true,
@@ -17,5 +17,5 @@ export default function gameModel(sequelize, DataTypes) {
       allowNull: false,
       type: DataTypes.DATE,
     },
-  });
+  }, { underscored: true });
 }

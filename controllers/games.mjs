@@ -101,7 +101,7 @@ const makeDeck = function () {
  * ========================================================
  */
 
-export default function games(db) {
+export default function initGamesController(db) {
   // render the main page
   const index = (request, response) => {
     response.render('games/index');

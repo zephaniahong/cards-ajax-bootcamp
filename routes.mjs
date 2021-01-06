@@ -1,10 +1,9 @@
 import db from './models/index.mjs';
 
-// import your controllers here
-import games from './controllers/games.mjs';
+import initGamesController from './controllers/games.mjs';
 
 export default function bindRoutes(app) {
-  const GamesController = games(db);
+  const GamesController = initGamesController(db);
   // main page
   app.get('/', GamesController.index);
   // create a new game
