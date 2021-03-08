@@ -98,10 +98,53 @@ export function createGame(){
     gameState: {
       cardDeck,
       playerHand,
+      score:0
     },
   };
 }
 
-export function dealCards(game){
-  return [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
+export function dealCards(cardDeck){
+  return [cardDeck.pop(), cardDeck.pop()];
+}
+
+export function isLargest(chosenCard, hand){
+
+  for( let i=0; i<hand.length; i+=1){
+    if( chosenCard.rank < hand[i].rank ){
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export function setUpdatedGame(chosenCard, game){
+
+  let playerHand;
+  let winner = null;
+  if( game.cardDeck.length > 1 ){
+
+    playerHand = dealCards(game.cardDeck);
+
+    if( chosenCard ){
+      if( chosenCard != 'first' ){
+
+        winner = isLargest( chosenCard, playerHand);
+
+        if( winner ){
+          game.score = game.score+1;
+        }else{
+          game.score = game.score-1;
+        }
+      }
+    }
+  }
+
+  return {
+    cardDeck: game.cardDeck,
+    previousHand: game.playerHand,
+    score:game.score,
+    playerHand,
+    winner,
+  };
 }

@@ -1,4 +1,4 @@
-import { createGame, dealCards } from '../game/index.mjs';
+import { createGame, setUpdatedGame } from '../game/index.mjs';
 
 /*
  * ========================================================
@@ -33,8 +33,10 @@ export default function initGamesController(db) {
       response.send({
         id: game.id,
         playerHand: game.gameState.playerHand,
+        score:0,
       });
     } catch (error) {
+      console.log( error );
       response.status(500).send(error);
     }
   };
@@ -46,22 +48,20 @@ export default function initGamesController(db) {
       const game = await db.Game.findByPk(request.params.id);
 
       // make changes to the object
-      const playerHand = dealCards(game);
+      const currentGameState = setUpdatedGame(request.body.chosenCard, game.gameState);
 
       // update the game with the new info
       await game.update({
-        gameState: {
-          cardDeck: game.gameState.cardDeck,
-          playerHand,
-        },
-
+        gameState: currentGameState
       });
 
       // send the updated game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        playerHand: game.gameState.playerHand,
+        playerHand: currentGameState.playerHand,
+        winner: currentGameState.winner,
+        score: currentGameState.score
       });
     } catch (error) {
       console.log( error );
