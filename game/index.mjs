@@ -95,11 +95,9 @@ export function createGame(){
   const playerHand = [cardDeck.pop(), cardDeck.pop()];
 
   return {
-    gameState: {
-      cardDeck,
-      playerHand,
-      score:0
-    },
+    cardDeck,
+    playerHand,
+    score:0
   };
 }
 

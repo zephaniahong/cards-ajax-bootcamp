@@ -26,13 +26,15 @@ export default function initGamesController(db) {
 
     try {
       // run the DB INSERT query
-      const game = await db.Game.create(newGame);
+      const game = await db.Game.create({
+        gameState:newGame
+      });
 
       // send the new game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
         id: game.id,
-        playerHand: game.gameState.playerHand,
+        playerHand: newGame.playerHand,
         score:0,
       });
     } catch (error) {
@@ -52,7 +54,7 @@ export default function initGamesController(db) {
 
       // update the game with the new info
       await game.update({
-        gameState: currentGameState
+        gameState:currentGameState
       });
 
       // send the updated game back to the user.
