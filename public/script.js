@@ -45,7 +45,7 @@ const runGame = function ({ playerHand, score, winner }) {
 
   handEl.classList.add('hand');
 
-  playerHand.forEach( card => {
+  playerHand.forEach(( card, index ) => {
     const cardEl = createCardEl(card);
     handEl.appendChild( cardEl );
     cardEl.addEventListener('click', ()=>{
@@ -55,7 +55,7 @@ const runGame = function ({ playerHand, score, winner }) {
       });
 
       if( currentPlayerHand.includes( card ) ){
-        chosenCard = card;
+        chosenCard = index;
         cardEl.classList.add('selected');;
       }
     });

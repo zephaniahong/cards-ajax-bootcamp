@@ -116,16 +116,18 @@ export function isLargest(chosenCard, hand){
   return true;
 }
 
-export function setUpdatedGame(chosenCard, game){
+export function setUpdatedGame(chosenCardIndex, game){
 
   let playerHand;
   let winner = null;
   if( game.cardDeck.length > 1 ){
 
+    const chosenCard = game.playerHand[chosenCardIndex];
+
     playerHand = dealCards(game.cardDeck);
 
     if( chosenCard ){
-      if( chosenCard != 'first' ){
+      if( chosenCardIndex != 'first' ){
 
         winner = isLargest( chosenCard, playerHand);
 
@@ -140,7 +142,6 @@ export function setUpdatedGame(chosenCard, game){
 
   return {
     cardDeck: game.cardDeck,
-    previousHand: game.playerHand,
     score:game.score,
     playerHand,
     winner,
