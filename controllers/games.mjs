@@ -115,6 +115,8 @@ export default function initGamesController(db) {
 
     const newGame = {
       gameState: {
+        previousHand: '',
+        turn: 1,
         cardDeck,
         playerHand,
       },
@@ -127,6 +129,7 @@ export default function initGamesController(db) {
       // send the new game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
+        turn: game.gameState.turn,
         id: game.id,
         playerHand: game.gameState.playerHand,
       });
@@ -137,25 +140,56 @@ export default function initGamesController(db) {
 
   // deal two new cards from the deck.
   const deal = async (request, response) => {
+    let current;
     try {
       // get the game by the ID passed in the request
       const game = await db.Game.findByPk(request.params.id);
 
       // make changes to the object
+      const { turn } = game.gameState;
+      const previousHand = game.gameState.playerHand;
       const playerHand = [game.gameState.cardDeck.pop(), game.gameState.cardDeck.pop()];
 
-      // update the game with the new info
       await game.update({
         gameState: {
+          previousHand,
+          turn: turn + 1,
           cardDeck: game.gameState.cardDeck,
           playerHand,
         },
-
       });
-
+      // check for winning condition if its the second hand dealt
+      if (game.gameState.turn % 2 === 0) {
+        // get highest rank of previous hand
+        let highestPreviousRank = 0;
+        for (let i = 0; i < previousHand.length; i += 1) {
+          if (previousHand[i].rank > highestPreviousRank) {
+            highestPreviousRank = previousHand[i].rank;
+          }
+        }
+        // get highest rank of current hand
+        let highestCurrentRank = 0;
+        for (let i = 0; i < playerHand.length; i += 1) {
+          if (playerHand[i].rank > highestCurrentRank) {
+            highestCurrentRank = playerHand[i].rank;
+          }
+        }
+        if (highestCurrentRank > highestPreviousRank) {
+          current = true;
+        } else if (highestCurrentRank === highestPreviousRank) {
+          current = 'draw';
+        }
+        else {
+          current = false;
+        }
+      } else {
+        current = '';
+      }
       // send the updated game back to the user.
       // dont include the deck so the user can't cheat
       response.send({
+        current,
+        turn,
         id: game.id,
         playerHand: game.gameState.playerHand,
       });

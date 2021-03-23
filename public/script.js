@@ -3,6 +3,7 @@ let currentGame = null;
 
 // create game btn
 const createGameBtn = document.createElement('button');
+const banner = document.createElement('span');
 
 // DOM manipulation function that displays the player's current hand.
 const runGame = function ({ playerHand }) {
@@ -29,9 +30,21 @@ const dealCards = function () {
     .then((response) => {
       // get the updated hand value
       currentGame = response.data;
-
       // display it to the user
-      runGame(currentGame);
+      if (currentGame.current === true) {
+        runGame(currentGame);
+        banner.innerText = 'you Win';
+      } else if (currentGame.current === false) {
+        runGame(currentGame);
+        banner.innerText = 'you Lose';
+      } else if (currentGame.current === 'draw') {
+        runGame(currentGame);
+        banner.innerText = 'draw';
+      }
+      else {
+        runGame(currentGame);
+        banner.innerText = '';
+      }
     })
     .catch((error) => {
       // handle error
@@ -45,7 +58,6 @@ const createGame = function () {
     .then((response) => {
       // set the global value to the new game.
       currentGame = response.data;
-
       console.log(currentGame);
 
       // display it out to the user
@@ -55,11 +67,13 @@ const createGame = function () {
       // manipulate the deck that is on the DB.
       // Create a button for it.
       const dealBtn = document.createElement('button');
+
       dealBtn.addEventListener('click', dealCards);
 
       // display the button
       dealBtn.innerText = 'Deal';
       document.body.appendChild(dealBtn);
+      document.body.appendChild(banner);
     })
     .catch((error) => {
       // handle error
